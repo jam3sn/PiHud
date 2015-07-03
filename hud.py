@@ -77,6 +77,6 @@ while not crashed:
 	getStats()
 	hud()
 	pygame.display.update()
-	clock.tick(30)
+	clock.tick(120)
 
 s.close()
