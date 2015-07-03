@@ -78,21 +78,21 @@ def hud():
 
 def getStats():
 	global speed, rpm, rpm_percentage, gear, breaking_lvl, fuel, fuel_percentage
-	data = s.recv(1024).decode().replace(' ', '')
-	data = data.replace(',', '').split(';')
-	speed = data[0].replace("'", '')
-	rpm = data[1].replace("'", '')
-	rpm_percentage = int(data[2].replace("'", ''))
-	gear = str(data[3].replace("'", ''))
-	breaking_lvl = data[4]
-	fuel = data[5]
-	fuel_percentage = data[6]
+	data = s.recv(1024).decode('ascii').replace(' ', '')
+	data = data.split(';')
+	speed = int(data[0])
+	rpm = int(data[1])
+	rpm_percentage = int(data[2])
+	gear = str(data[3])
+	breaking_lvl = int(data[4])
+	fuel = int(data[5])
+	fuel_percentage= int(data[6])
 
 while not crashed:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			crashed = True
-            s.close()
+			s.close()
 			print(event)
 
 	win.fill((32,32,32))
