@@ -5,11 +5,11 @@ import time
 
 speed = 0
 rpm = 0
-rpm_percentage = 20
+rpm_percentage = 0
 gear = 'N'
 breaking_lvl = 0
 fuel = 0
-fuel_percentage = 100
+fuel_percentage = 0
 current_time = 0
 
 pygame.init()
@@ -20,6 +20,7 @@ win.fill((35,35,35))
 fg = pygame.font.Font('btf.ttf', 100)
 fs = pygame.font.Font('btf.ttf', 60)
 fm = pygame.font.Font('btf.ttf', 15)
+fb = pygame.font.Font('btf.ttf', 25)
 
 crashed = False
 pygame.display.update()
@@ -31,11 +32,11 @@ port = 9000
 s.connect((host, port))
 
 def hud():
-	speed_lbl = fs.render(str(speed), 0, (240,240,240))
+	speed_lbl = fs.render(str(speed), True, (240,240,240))
 	speed_lbl_x = (320 - speed_lbl.get_width()) / 2
-	win.blit(speed_lbl, (speed_lbl_x, 165))
+	win.blit(speed_lbl, (speed_lbl_x, 155))
 
-	mph_lbl = fm.render('MPH', 0, (240,240,240))
+	mph_lbl = fm.render('MPH', True, (240,240,240))
 	mph_lbl_x = (320 - mph_lbl.get_width()) / 2
 	win.blit(mph_lbl, (mph_lbl_x, 215))
 
@@ -48,9 +49,30 @@ def hud():
 	else:
 		rpm_bar = pygame.draw.rect(win, (35,35,35), (0,0,rpm_used,50))
 
-	gear_lbl = fg.render(gear, 0, (240,240,240))
+	gear_lbl = fg.render(gear, True, (240,240,240))
 	gear_lbl_x = (320 - gear_lbl.get_width()) / 2
-	win.blit(gear_lbl, (gear_lbl_x, 75))
+	win.blit(gear_lbl, (gear_lbl_x, 55))
+
+	fuel_bg = pygame.draw.rect(win, (240,240,240), (20,60,35,145))
+	fuel_used = 141 - (fuel_percentage/100*141)
+	if fuel_percentage == 0:
+		fuel_bar = pygame.draw.rect(win, (240,240,240), (22,62,31,141))
+	elif fuel_percentage <= 5:
+		fuel_bar = pygame.draw.rect(win, (158,0,0), (22,62,31,141))
+		fuel_bar = pygame.draw.rect(win, (240,240,240), (22,62,31,fuel_used))
+	else:
+		fuel_bar = pygame.draw.rect(win, (35,35,35), (22,62,31,141))
+		fuel_bar = pygame.draw.rect(win, (240,240,240), (22,62,31,fuel_used))
+	fuel_lbl = fb.render(str(fuel) + 'L', True, (240,240,240))
+	win.blit(fuel_lbl, (22, 205))
+
+	break_bg = pygame.draw.rect(win, (240,240,240), (265,60,35,145))
+	break_per = 141 - (breaking_lvl/100*141)
+	fuel_bar = pygame.draw.rect(win, (158,0,0), (267,62,31,141))
+	fuel_bar = pygame.draw.rect(win, (240,240,240), (267,62,31,break_per))
+	fuel_lbl = fb.render('B', True, (240,240,240))
+	win.blit(fuel_lbl, (275, 205))
+
 
 	pygame.display.update()
 
@@ -70,7 +92,7 @@ while not crashed:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			crashed = True
-			s.close()
+            s.close()
 			print(event)
 
 	win.fill((32,32,32))
