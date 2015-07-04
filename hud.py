@@ -2,6 +2,7 @@ import sys
 import socket
 import pygame
 import time
+import json
 
 speed = 0
 rpm = 0
@@ -73,13 +74,16 @@ def hud():
 	fuel_lbl = fb.render('B', True, (240,240,240))
 	win.blit(fuel_lbl, (275, 205))
 
-
 	pygame.display.update()
 
 def getStats():
 	global speed, rpm, rpm_percentage, gear, breaking_lvl, fuel, fuel_percentage
-	data = s.recv(1024).decode('ascii').replace(' ', '')
-	data = data.split(';')
+	response = []
+	chunk = s.recv(1024)
+	response.append(chunk)
+	data = json.loads(b"".join(response).decode('utf-8'))
+	#data = s.recv(4096).decode('utf-8').replace(' ', '').replace("'", '').replace(')', '').replace(',', '')
+	#data = data.split(';')
 	speed = int(data[0])
 	rpm = int(data[1])
 	rpm_percentage = int(data[2])
